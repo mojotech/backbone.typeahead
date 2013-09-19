@@ -1,0 +1,26 @@
+{
+  "name": "backbone.typeahead",
+  "version": "0.0.1",
+  "description": "Backbone collection typeahead search with facet",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mojotech/backbone.typeahead.git"
+  },
+  "author": "MojoTech / Paul Tyng",
+  "bugs": {
+    "url": "https://github.com/mojotech/backbone.typeahead/issues"
+  },
+  "dependencies": {
+    "backbone": "~1.0.0",
+    "underscore": "~1.5.2"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "coffee-script": "latest",
+    "uglify-js": "latest",
+    "mocha": "~1.12.1",
+    "should": "~1.2.2"
+  }
+}
