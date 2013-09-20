@@ -7,7 +7,7 @@ task 'build', 'compiles to source', ->
   console.log 'Compiling source'
   source = fs.readFileSync(__dirname + '/js/app.coffee', 'utf8')
   compiled = cs.compile(source)
-  fs.writeFileSync(__dirname + '/js/app.min.js', uglify.minify(compiled, {fromString: 1}).code)
+  fs.writeFileSync(__dirname + '/js/app.min.js', compiled)
 
   tmpl_precompile.precompile({
     relative: true
