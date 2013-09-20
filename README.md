@@ -2,6 +2,8 @@
 
 Integrates typeahead search into backbone collections.
 
+View the [online demo](http://mojotech.github.io/backbone.typeahead).
+
 ### Examples
 
 ```coffeescript
