@@ -15,14 +15,14 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
     for model in models
       tokens = @_tokenizeModel(model)
-      id = model.id or model.cid
+      id = if model.id? then model.id else model.cid
 
       @_tokens[id] = tokens
 
       for t in tokens
         character = t.charAt(0)
         adjacency = @_adjacency[character] ||= [id]
-        adjacency.push(id) unless _.indexOf(adjacency, id) >= 0
+        adjacency.push(id) unless ~_.indexOf(adjacency, id)
 
   _removeFromIndex: (models) ->
     if _.isArray(models) then models.slice() else [models]
@@ -50,7 +50,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
     queryTokens = @_tokenize(query)
     lists = []
-    shortestList = Object.keys(@_byId)
+    shortestList = _.keys(@_byId)
     suggestions = []
 
     firstChars = _(queryTokens).chain().map((t) -> t.charAt(0)).uniq().value()
@@ -73,7 +73,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
       inFacet = !facets? or @_facetMatch(facets, item.attributes)
 
       isCandidate = inFacet and _.every lists, (list) ->
-        _.indexOf(list, id) >= 0
+        ~_.indexOf(list, id)
 
       isMatch = isCandidate and _.every queryTokens, (qt) =>
         _.some @_tokens[id], (t) ->
