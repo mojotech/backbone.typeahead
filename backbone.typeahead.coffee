@@ -22,7 +22,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
       for t in tokens
         character = t.charAt(0)
         adjacency = @_adjacency[character] ||= [id]
-        adjacency.push(id) unless _.indexOf(adjacency, id) >= 0
+        adjacency.push(id) unless ~_.indexOf(adjacency, id)
 
   _removeFromIndex: (models) ->
     if _.isArray(models) then models.slice() else [models]
@@ -73,7 +73,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
       inFacet = !facets? or @_facetMatch(facets, item.attributes)
 
       isCandidate = inFacet and _.every lists, (list) ->
-        _.indexOf(list, id) >= 0
+        ~_.indexOf(list, id)
 
       isMatch = isCandidate and _.every queryTokens, (qt) =>
         _.some @_tokens[id], (t) ->
