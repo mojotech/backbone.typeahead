@@ -9,10 +9,10 @@ class Albums extends Backbone.TypeaheadCollection
   typeaheadAttributes: ['band', 'name']
 
 albums = new Albums([
-  { band: 'A Flock of Seagulls', name: 'A Flock of Seagulls' }
-  { band: 'Rick Astley', name: 'Whenever You Need Somebody' }
-  { band: 'Queen', name: 'A Day at the Races' }
-  { band: 'Queen', name: 'Tie Your Mother Down' }
+  { id: 1, band: 'A Flock of Seagulls', name: 'A Flock of Seagulls' }
+  { id: 2, band: 'Rick Astley', name: 'Whenever You Need Somebody' }
+  { id: 3, band: 'Queen', name: 'A Day at the Races' }
+  { id: 4, band: 'Queen', name: 'Tie Your Mother Down' }
 ])
 
 console.log album.get('name') for album in albums.typeahead('you')
