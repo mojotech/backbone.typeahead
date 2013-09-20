@@ -13,7 +13,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
     for model in models
       tokens = @_tokenizeModel(model)
-      id = model.id
+      id = model.id or model.cid
 
       @_tokens[id] = tokens
 
@@ -99,7 +99,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     @
 
   _onModelEvent: (event, model, collection, options) ->
-    if _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
+    if event is "change:#{model.idAttribute}" or _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
       @_removeFromIndex model
       @_addToIndex model
 
