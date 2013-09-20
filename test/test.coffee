@@ -35,6 +35,7 @@ describe 'Backbone Typeahead', ->
       expected.should.eql actual
 
   describe 'Common Error States', ->
+    it 'should handle a falsy id'
     it 'should handle an empty collection'
 
     it 'should require the typeaheadAttributes member', ->
