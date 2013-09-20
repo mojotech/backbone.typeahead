@@ -15,7 +15,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
     for model in models
       tokens = @_tokenizeModel(model)
-      id = model.id or model.cid
+      id = if model.id? then model.id else model.cid
 
       @_tokens[id] = tokens
 
