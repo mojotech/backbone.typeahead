@@ -58,4 +58,16 @@ buf.push('</p>');
 }
 return buf.join("");
 };
+Tmpl.facet_item = function anonymous(locals) {
+var attrs = jade.attrs, escape = jade.escape;
+var buf = [];
+with (locals || {}) {
+var interp;
+buf.push('<a>');
+var __val__ = id
+buf.push(escape(null == __val__ ? "" : __val__));
+buf.push('</a>');
+}
+return buf.join("");
+};
 })();

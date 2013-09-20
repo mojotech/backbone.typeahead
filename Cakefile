@@ -15,7 +15,7 @@ task 'build', 'compiles to source', ->
       source: '/templates/'
       output: '/templates.js'
       namespace: 'Tmpl'
-      templates: ['repo_item']
+      templates: ['repo_item', 'facet_item']
       uglify: false
     ]
   }, __dirname)
