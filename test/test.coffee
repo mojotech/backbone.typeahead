@@ -33,3 +33,7 @@ describe 'Backbone Typeahead', ->
       actual = _.map albums.typeahead('ra', band: 'Queen'), (a) -> a.get('name')
 
       expected.should.eql actual
+
+  describe 'Common Error States', ->
+    it 'should handle an empty collection'
+    it 'should require the typeaheadAttributes member'
