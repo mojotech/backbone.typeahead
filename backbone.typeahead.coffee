@@ -50,7 +50,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
     queryTokens = @_tokenize(query)
     lists = []
-    shortestList = Object.keys(@_byId)
+    shortestList = _.keys(@_byId)
     suggestions = []
 
     firstChars = _(queryTokens).chain().map((t) -> t.charAt(0)).uniq().value()
