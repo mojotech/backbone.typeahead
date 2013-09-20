@@ -6,6 +6,8 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     s.toLowerCase().split(/[\s\-_]+/)
 
   _tokenizeModel: (model) ->
+    throw new Error('Missing typeaheadAttributes value') unless @typeaheadAttributes?
+
     _.uniq(@_tokenize(_.map(@typeaheadAttributes, (att) -> model.get(att)).join(' ')))
 
   _addToIndex: (models) ->

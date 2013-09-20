@@ -36,4 +36,10 @@ describe 'Backbone Typeahead', ->
 
   describe 'Common Error States', ->
     it 'should handle an empty collection'
-    it 'should require the typeaheadAttributes member'
+
+    it 'should require the typeaheadAttributes member', ->
+      class BrokenCollection extends Backbone.TypeaheadCollection
+      causeError = ->
+        collection = new BrokenCollection({name: 'Test'})
+
+      causeError.should.throw('Missing typeaheadAttributes value')
