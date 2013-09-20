@@ -18,7 +18,7 @@ albums = new Albums([
 console.log album.get('name') for album in albums.typeahead('you')
 # Outputs:
 #  Whenever You Need Somebody
-#  Tie Your Mother Down'
+#  Tie Your Mother Down
 
 console.log album.get('name') for album in albums.typeahead('ra', band: 'Queen')
 # Outputs:
