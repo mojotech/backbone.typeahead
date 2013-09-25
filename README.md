@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mojotech/backbone.typeahead.png)](https://travis-ci.org/mojotech/backbone.typeahead)
+
 ## Backbone Typeahead
 
 Integrates typeahead search into backbone collections.
