@@ -45,14 +45,17 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
     return true
 
+  typeaheadIndexer: (facets) ->
+    return null unless facets? and _.keys(facets).length > 0
+    _.map(@where(facets), (m) -> if m.id? then m.id else m.cid)
+
   typeahead: (query, facets) ->
     throw new Error('Index is not built') unless @_adjacency?
 
     queryTokens = @_tokenize(query)
+    suggestions = []
     lists = []
     shortestList = _.keys(@_byId)
-    suggestions = []
-
     firstChars = _(queryTokens).chain().map((t) -> t.charAt(0)).uniq().value()
 
     _.all firstChars, (firstChar) =>
@@ -60,19 +63,21 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
       return false unless list?
 
-      lists.push(list)
-      shortestList = list if not shortestList? || list.length < shortestList.length
+      lists.push list
+      shortestList = list if list.length < shortestList.length
 
       true
 
     return [] if lists.length < firstChars.length
 
+    facetList = @typeaheadIndexer(facets)
+    lists.push facetList if facetList?
+    shortestList = facetList if facetList? and facetList.length < shortestList.length
+
     for id in shortestList
       item = @get(id)
 
-      inFacet = !facets? or @_facetMatch(facets, item.attributes)
-
-      isCandidate = inFacet and _.every lists, (list) ->
+      isCandidate = _.every lists, (list) ->
         ~_.indexOf(list, id)
 
       isMatch = isCandidate and _.every queryTokens, (qt) =>
