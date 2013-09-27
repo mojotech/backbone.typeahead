@@ -75,8 +75,6 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     shortestList = facetList if facetList? and facetList.length < shortestList.length
 
     for id in shortestList
-      item = @get(id)
-
       isCandidate = _.every lists, (list) ->
         ~_.indexOf(list, id)
 
@@ -84,7 +82,13 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
         _.some @_tokens[id], (t) ->
           t.indexOf(qt) is 0
 
-      isMatch and suggestions.push(item)
+      if isMatch
+        item = @get(id)
+
+        if @typeaheadPreserveOrder
+          suggestions[@indexOf(item)] = item
+        else
+          suggestions.push item
 
     suggestions
 
