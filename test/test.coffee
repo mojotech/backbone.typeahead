@@ -86,7 +86,16 @@ describe 'Backbone Typeahead', ->
 
       actual.should.eql expected
 
-    it 'should handle an empty collection'
+    it 'should handle an empty collection', ->
+      class TestCollection extends Backbone.TypeaheadCollection
+        typeaheadAttributes: ['id']
+
+        collection = new TestCollection()
+
+        expected = []
+        actual = _.map collection.typeahead('a'), (m) -> m.get('id')
+
+        actual.should.eql expected
 
     it 'should require the typeaheadAttributes member', ->
       class BrokenCollection extends Backbone.TypeaheadCollection
