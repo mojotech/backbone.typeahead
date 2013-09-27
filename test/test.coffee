@@ -43,13 +43,14 @@ describe 'Backbone Typeahead', ->
     it 'should respect the order of the list', ->
       collection = new IndexedCollection([
         { id: 1, name: 'Aa' }
+        { id: 3, name: 'Ba' }
         { id: 2, name: 'Ab' }
       ], index: [2, 1])
 
       collection.typeaheadPreserveOrder = true
 
       expected = ['Aa', 'Ab']
-      actual = _.map collection.typeahead(null, indexedFacet: 'this value does not matter'), (m) -> m.get('name')
+      actual = _.map collection.typeahead('a', indexedFacet: 'this value does not matter'), (m) -> m.get('name')
 
       actual.should.eql expected
 

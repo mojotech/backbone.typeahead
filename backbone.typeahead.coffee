@@ -90,7 +90,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
         else
           suggestions.push item
 
-    suggestions
+    if @typeaheadPreserveOrder then _.compact(suggestions) else suggestions
 
   _reset: ->
     @_tokens = {}
