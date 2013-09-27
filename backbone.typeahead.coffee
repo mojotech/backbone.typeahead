@@ -55,7 +55,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     queryTokens = @_tokenize(query)
     suggestions = []
     lists = []
-    shortestList = _.keys(@_byId)
+    shortestList = null
     firstChars = _(queryTokens).chain().map((t) -> t.charAt(0)).uniq().value()
 
     _.all firstChars, (firstChar) =>
@@ -64,7 +64,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
       return false unless list?
 
       lists.push list
-      shortestList = list if list.length < shortestList.length
+      shortestList = list if list.length < (shortestList?.length or @length)
 
       true
 
@@ -72,7 +72,9 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
     facetList = @typeaheadIndexer(facets)
     lists.push facetList if facetList?
-    shortestList = facetList if facetList? and facetList.length < shortestList.length
+    shortestList = facetList if facetList? and facetList.length < (shortestList?.length or @length)
+
+    return @models unless shortestList?
 
     for id in shortestList
       isCandidate = _.every lists, (list) ->
