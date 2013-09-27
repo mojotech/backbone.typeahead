@@ -8,7 +8,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
   _tokenizeModel: (model) ->
     throw new Error('Missing typeaheadAttributes value') unless @typeaheadAttributes?
 
-    _.uniq(@_tokenize(_.map(@typeaheadAttributes, (att) -> model.get(att)).join(' ')))
+    _.uniq(@_tokenize(_.flatten(_.map(@typeaheadAttributes, (att) -> model.get(att))).join(' ')))
 
   _addToIndex: (models) ->
     if _.isArray(models) then models.slice() else [models]
