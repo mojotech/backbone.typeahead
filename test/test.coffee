@@ -69,7 +69,23 @@ describe 'Backbone Typeahead', ->
       actual.should.eql expected
 
   describe 'Common Error States', ->
-    it 'should handle a falsy id'
+    it 'should handle a falsy id', ->
+      class TestCollection extends Backbone.TypeaheadCollection
+        typeaheadAttributes: ['name']
+
+      collection = new TestCollection([
+        { id: 3, name: 'Aa' }
+        { id: 0, name: 'Ba' }
+        { id: '', name: 'Bb' }
+        { id: false, name: 'Ca' }
+        { id: 7, name: 'Bc' }
+      ])
+
+      expected = ['Ba', 'Bb', 'Bc']
+      actual = _.map collection.typeahead('b'), (m) -> m.get('name')
+
+      actual.should.eql expected
+
     it 'should handle an empty collection'
 
     it 'should require the typeaheadAttributes member', ->
