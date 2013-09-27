@@ -64,7 +64,6 @@ describe 'Backbone Typeahead', ->
       ], index: [3, 5])
 
       expected = ['Ac', 'Ae']
-      `debugger`
       actual = _.map collection.typeahead('a', indexedFacet: 'this value does not matter'), (m) -> m.get('name')
 
       actual.should.eql expected
