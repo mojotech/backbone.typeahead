@@ -26,19 +26,32 @@ describe 'Backbone Typeahead', ->
       expected = ['Whenever You Need Somebody', 'Tie Your Mother Down']
       actual = _.map albums.typeahead('you'), (a) -> a.get('name')
 
-      expected.should.eql actual
+      actual.should.eql expected
 
     it 'should handle simple facet', ->
       expected = ['A Day at the Races']
       actual = _.map albums.typeahead('ra', band: 'Queen'), (a) -> a.get('name')
 
-      expected.should.eql actual
+      actual.should.eql expected
 
   describe 'Support External Indexes for Facets', ->
     class IndexedCollection extends Backbone.TypeaheadCollection
       typeaheadAttributes: ['name']
       typeaheadIndexer: (facet, value) -> @index
       initialize: (models, options) -> @index = options.index
+
+    it 'should respect the order of the list', ->
+      collection = new IndexedCollection([
+        { id: 1, name: 'Aa' }
+        { id: 2, name: 'Ab' }
+      ], index: [2, 1])
+
+      collection.typeaheadPreserveOrder = true
+
+      expected = ['Aa', 'Ab']
+      actual = _.map collection.typeahead(null, indexedFacet: 'this value does not matter'), (m) -> m.get('name')
+
+      actual.should.eql expected
 
     it 'should allow for an external index', ->
       collection = new IndexedCollection([
@@ -54,7 +67,7 @@ describe 'Backbone Typeahead', ->
       `debugger`
       actual = _.map collection.typeahead('a', indexedFacet: 'this value does not matter'), (m) -> m.get('name')
 
-      expected.should.eql actual
+      actual.should.eql expected
 
   describe 'Common Error States', ->
     it 'should handle a falsy id'
