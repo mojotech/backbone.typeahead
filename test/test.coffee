@@ -104,3 +104,20 @@ describe 'Backbone Typeahead', ->
         collection = new BrokenCollection({name: 'Test'})
 
       causeError.should.throw('Missing typeaheadAttributes value')
+
+  describe 'Common Backbone Scenarios', ->
+    it 'should handle attributes with array values'
+
+    it 'should support alternative ID attributes', ->
+      json = '[{"url":"people/Nick-Kishfy","indexText":"Nick Kishfy Founder & CEO boss hiker ceo","title":"Nick Kishfy"}]'
+
+      class PageModel extends Backbone.Model
+        idAttribute: 'url'
+
+      class PageCollection extends Backbone.TypeaheadCollection
+        model: PageModel
+        typeaheadAttributes: ['indexText']
+
+      collection = new PageCollection(JSON.parse(json))
+
+      collection.typeahead().length.should.eql collection.length
