@@ -7,24 +7,25 @@ require '../backbone.typeahead.coffee'
 describe 'Backbone Typeahead', ->
   describe 'Readme Tests', ->
     class Albums extends Backbone.TypeaheadCollection
-      typeaheadAttributes: ['band', 'name']
+        typeaheadAttributes: ['band', 'name']
 
-    albums = new Albums([
-      { band: 'A Flock of Seagulls', name: 'A Flock of Seagulls' }
-      { band: 'Rick Astley', name: 'Whenever You Need Somebody' }
-      { band: 'Queen', name: 'A Day at the Races' }
-      { band: 'Queen', name: 'Tie Your Mother Down' }
-    ])
+    beforeEach ->
+      @albums = new Albums([
+        { band: 'A Flock of Seagulls', name: 'A Flock of Seagulls' }
+        { band: 'Rick Astley', name: 'Whenever You Need Somebody' }
+        { band: 'Queen', name: 'A Day at the Races' }
+        { band: 'Queen', name: 'Tie Your Mother Down' }
+      ])
 
     it 'should handle simple search', ->
       expected = ['Whenever You Need Somebody', 'Tie Your Mother Down']
-      actual = _.map albums.typeahead('you'), (a) -> a.get('name')
+      actual = _.map @albums.typeahead('you'), (a) -> a.get('name')
 
       actual.should.eql expected
 
     it 'should handle simple facet', ->
       expected = ['A Day at the Races']
-      actual = _.map albums.typeahead('ra', band: 'Queen'), (a) -> a.get('name')
+      actual = _.map @albums.typeahead('ra', band: 'Queen'), (a) -> a.get('name')
 
       actual.should.eql expected
 
