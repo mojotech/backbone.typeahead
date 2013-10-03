@@ -7,24 +7,25 @@ require '../backbone.typeahead.coffee'
 describe 'Backbone Typeahead', ->
   describe 'Readme Tests', ->
     class Albums extends Backbone.TypeaheadCollection
-      typeaheadAttributes: ['band', 'name']
+        typeaheadAttributes: ['band', 'name']
 
-    albums = new Albums([
-      { band: 'A Flock of Seagulls', name: 'A Flock of Seagulls' }
-      { band: 'Rick Astley', name: 'Whenever You Need Somebody' }
-      { band: 'Queen', name: 'A Day at the Races' }
-      { band: 'Queen', name: 'Tie Your Mother Down' }
-    ])
+    beforeEach ->
+      @albums = new Albums([
+        { band: 'A Flock of Seagulls', name: 'A Flock of Seagulls' }
+        { band: 'Rick Astley', name: 'Whenever You Need Somebody' }
+        { band: 'Queen', name: 'A Day at the Races' }
+        { band: 'Queen', name: 'Tie Your Mother Down' }
+      ])
 
     it 'should handle simple search', ->
       expected = ['Whenever You Need Somebody', 'Tie Your Mother Down']
-      actual = _.map albums.typeahead('you'), (a) -> a.get('name')
+      actual = _.map @albums.typeahead('you'), (a) -> a.get('name')
 
       actual.should.eql expected
 
     it 'should handle simple facet', ->
       expected = ['A Day at the Races']
-      actual = _.map albums.typeahead('ra', band: 'Queen'), (a) -> a.get('name')
+      actual = _.map @albums.typeahead('ra', band: 'Queen'), (a) -> a.get('name')
 
       actual.should.eql expected
 
@@ -129,3 +130,42 @@ describe 'Backbone Typeahead', ->
       collection = new PageCollection(JSON.parse(json))
 
       collection.typeahead().length.should.eql collection.length
+
+  describe 'Collection Changes', ->
+    class Albums extends Backbone.TypeaheadCollection
+      typeaheadAttributes: ['band', 'name']
+
+    beforeEach ->
+      @albums = new Albums([
+        { band: 'A Flock of Seagulls', name: 'A Flock of Seagulls' }
+        { band: 'Rick Astley', name: 'Whenever You Need Somebody' }
+        { band: 'Queen', name: 'A Day at the Races' }
+        { band: 'Queen', name: 'Tie Your Mother Down' }
+      ])
+
+    it 'should handle adding a model', ->
+      @albums.add
+        band: 'Band of Horses'
+        name: 'Everything All The Time'
+
+      expected = ['Tie Your Mother Down', 'Everything All The Time']
+      actual = _.map @albums.typeahead('ti'), (m) -> m.get('name')
+
+      actual.should.eql expected
+
+    it 'should handle removing a model', ->
+      @albums.remove @albums.findWhere(band: 'Queen')
+
+      expected = ['Whenever You Need Somebody']
+      actual = _.map @albums.typeahead('you'), (a) -> a.get('name')
+
+      actual.should.eql.expected
+
+    it 'should handle changing a typeahead attribute value', ->
+      model = @albums.findWhere(band: 'Rick Astley')
+      model.set 'name', 'Hold Me in Your Arms'
+
+      expected = ['Tie Your Mother Down', 'Hold Me in Your Arms']
+      actual = _.map @albums.typeahead('m'), (m) -> m.get('name')
+
+      actual.should.eql expected
