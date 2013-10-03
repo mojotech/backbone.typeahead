@@ -1,4 +1,4 @@
-do (Backbone, Marionette, _, $) ->
+do (Backbone, Marionette, Tmpl, _, $) ->
   class Repo extends Backbone.Model
 
   class Repos extends Backbone.TypeaheadCollection
