@@ -11,19 +11,10 @@ do (Backbone, Marionette, _, $) ->
     className: 'list-group-item'
     template: Tmpl.repo_item
 
-    hide: -> @$el.hide()
-    show: -> @$el.show()
-
   class RepoListView extends Marionette.CollectionView
     tagName: 'ul'
     className: 'list-group'
     itemView: RepoItemView
-
-    filter: (models) ->
-      @children.call 'hide'
-
-      for model in models
-        @children.findByModel(model).show()
 
   class FacetItemView extends Marionette.ItemView
     tagName: 'li'
@@ -45,14 +36,19 @@ do (Backbone, Marionette, _, $) ->
 
   $ ->
     listView = null
-    facets = null
     repos = new Repos()
     lastQuery = ''
     lastFacets = null
 
     applyTypeahead = ->
+      listView?.close()
+
       results = repos.typeahead(lastQuery, lastFacets)
-      listView.filter results
+      results = new Repos(results)
+
+      listView = new RepoListView(collection: results)
+
+      $('#list').append(listView.render().el)
 
     repos.fetch().done ->
       facets = _(repos.pluck('language'))
@@ -73,8 +69,9 @@ do (Backbone, Marionette, _, $) ->
       listView = new RepoListView(collection: repos)
 
       $('#facet').append(facetView.render().el)
-      $('#list').append(listView.render().el)
 
-    $('input').keyup (e) ->
+      applyTypeahead()
+
+    $('input').on 'input', (e) ->
       lastQuery = $(this).val()
       applyTypeahead()
