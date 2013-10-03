@@ -88,7 +88,7 @@ describe 'Backbone Typeahead', ->
         collection = new TestCollection()
 
         expected = []
-        actual = _.map collection.typeahead('a'), (m) -> m.get('id')
+        actual = _.map collection.typeahead('a'), (m) -> m.id
 
         actual.should.eql expected
 
@@ -100,7 +100,21 @@ describe 'Backbone Typeahead', ->
       causeError.should.throw('Missing typeaheadAttributes value')
 
   describe 'Common Backbone Scenarios', ->
-    it 'should handle attributes with array values'
+    it 'should handle attributes with array values', ->
+      class MyModel extends Backbone.Model
+
+      class MyCollection extends Backbone.TypeaheadCollection
+        model: MyModel
+        typeaheadAttributes: ['array']
+
+      collection = new MyCollection([
+        { id: 1, array: ['Aa', 'Ab'] }
+        { id: 2, array: ['Aa'] }
+        { id: 3, array: ['Bb'] }
+      ])
+
+      expected = [1, 2]
+      actual = _.map collection.typeahead('a'), (m) -> m.id
 
     it 'should support alternative ID attributes', ->
       json = '[{"url":"people/Nick-Kishfy","indexText":"Nick Kishfy Founder & CEO boss hiker ceo","title":"Nick Kishfy"}]'
