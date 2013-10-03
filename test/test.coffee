@@ -5,12 +5,6 @@ global.Backbone = require 'backbone'
 require '../backbone.typeahead.coffee'
 
 describe 'Backbone Typeahead', ->
-  testRoutes =
-    'todos/new': 'show'
-    'todos/:todo_id/comments/:id': 'showComment'
-    'todos/:id': 'show'
-    'todos': 'index'
-
   describe 'Readme Tests', ->
     class Albums extends Backbone.TypeaheadCollection
       typeaheadAttributes: ['band', 'name']
