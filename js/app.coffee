@@ -21,7 +21,9 @@ do (Backbone, Marionette, _, $) ->
 
     filter: (models) ->
       @children.call 'hide'
-      @children.findByModel(model).show() for model in models
+
+      for model in models
+        @children.findByModel(model).show()
 
   class FacetItemView extends Marionette.ItemView
     tagName: 'li'
@@ -30,14 +32,16 @@ do (Backbone, Marionette, _, $) ->
     events:
       'click': -> @trigger 'facet', @model.id
 
-    applyFacet: (facet) -> @$el.toggleClass('active', @model.id is facet)
+    applyFacet: (facet) ->
+      @$el.toggleClass('active', @model.id is facet)
 
   class FacetListView extends Marionette.CollectionView
     tagName: 'ul'
     className: 'nav nav-stacked nav-pills'
     itemView: FacetItemView
 
-    applyFacet: (facet) -> @children.call 'applyFacet', facet
+    applyFacet: (facet) ->
+      @children.call 'applyFacet', facet
 
   $ ->
     listView = null
@@ -51,13 +55,18 @@ do (Backbone, Marionette, _, $) ->
       listView.filter results
 
     repos.fetch().done ->
-      facets = _(repos.pluck('language')).chain().compact().uniq().value().sort()
+      facets = _(repos.pluck('language'))
+        .chain().compact().uniq().value()
+        .sort()
+
       facets = _.map(facets, (l) -> id: l)
       facets = new Backbone.Collection(facets)
 
       facetView = new FacetListView(collection: facets)
       facetView.on 'itemview:facet', (iv, facet) ->
-        lastFacets = if lastFacets?.language is facet then null else language: facet
+        unless lastFacets?.language is facet
+          lastFacets = language: facet
+
         facetView.applyFacet lastFacets?.language
         applyTypeahead()
 
@@ -69,4 +78,3 @@ do (Backbone, Marionette, _, $) ->
     $('input').keyup (e) ->
       lastQuery = $(this).val()
       applyTypeahead()
-

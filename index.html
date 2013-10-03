@@ -5,24 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
-
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/default.min.css">
   </head>
   <body>
   <a href="https://github.com/mojotech/backbone.typeahead"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
     <div class="container">
       <h1>Backbone Typeahead</h1>
-      <div class="form-group">
-        <input class="form-control">
-      </div>
       <div class="row">
-        <div class="col-xs-2">
-          <div id="facet">
+        <div class="col-xs-6">
+          <div class="form-group">
+            <input class="form-control" x-webkit-speech speech>
+          </div>
+          <div class="row">
+            <div class="col-xs-3">
+              <div id="facet">
+              </div>
+            </div>
+            <div class="col-xs-9">
+              <div id="list">
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-xs-10">
-          <div id="list">
-          </div>
+        <div class="col-xs-6">
+          <pre><code class="coffeescript">do (Backbone, Marionette, _, $) ->
+  class Repo extends Backbone.Model
+
+  class Repos extends Backbone.TypeaheadCollection
+    url: 'data/repos.json'
+    model: Repo
+    typeaheadAttributes: ['name', 'description', 'language']
+
+  class RepoItemView extends Marionette.ItemView
+    tagName: 'li'
+    className: 'list-group-item'
+    template: Tmpl.repo_item
+
+    hide: -> @$el.hide()
+    show: -> @$el.show()
+
+  class RepoListView extends Marionette.CollectionView
+    tagName: 'ul'
+    className: 'list-group'
+    itemView: RepoItemView
+
+    filter: (models) ->
+      @children.call 'hide'
+
+      for model in models
+        @children.findByModel(model).show()
+
+  class FacetItemView extends Marionette.ItemView
+    tagName: 'li'
+    template: Tmpl.facet_item
+
+    events:
+      'click': -> @trigger 'facet', @model.id
+
+    applyFacet: (facet) ->
+      @$el.toggleClass('active', @model.id is facet)
+
+  class FacetListView extends Marionette.CollectionView
+    tagName: 'ul'
+    className: 'nav nav-stacked nav-pills'
+    itemView: FacetItemView
+
+    applyFacet: (facet) ->
+      @children.call 'applyFacet', facet
+
+  $ ->
+    listView = null
+    facets = null
+    repos = new Repos()
+    lastQuery = ''
+    lastFacets = null
+
+    applyTypeahead = ->
+      results = repos.typeahead(lastQuery, lastFacets)
+      listView.filter results
+
+    repos.fetch().done ->
+      facets = _(repos.pluck('language'))
+        .chain().compact().uniq().value()
+        .sort()
+
+      facets = _.map(facets, (l) -> id: l)
+      facets = new Backbone.Collection(facets)
+
+      facetView = new FacetListView(collection: facets)
+      facetView.on 'itemview:facet', (iv, facet) ->
+        unless lastFacets?.language is facet
+          lastFacets = language: facet
+
+        facetView.applyFacet lastFacets?.language
+        applyTypeahead()
+
+      listView = new RepoListView(collection: repos)
+
+      $('#facet').append(facetView.render().el)
+      $('#list').append(listView.render().el)
+
+    $('input').keyup (e) ->
+      lastQuery = $(this).val()
+      applyTypeahead()</code></pre>
         </div>
       </div>
     </div>
@@ -33,7 +119,9 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/1.1.0-bundled/backbone.marionette.min.js"></script>
     <script src="js/backbone.typeahead.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
     <script src="templates.js"></script>
     <script src="js/app.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
   </body>
 </html>
