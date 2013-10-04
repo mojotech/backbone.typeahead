@@ -100,6 +100,23 @@ describe 'Backbone Typeahead', ->
 
       causeError.should.throw('Missing typeaheadAttributes value')
 
+    it 'should handle null/weird/missing attribute values', ->
+      class BrokenCollection extends Backbone.TypeaheadCollection
+        typeaheadAttributes: ['name', 'text']
+
+      collection = new BrokenCollection([
+        { name: null, text: 'Aa' }
+        { name: 0, text: 'Ab' }
+        { name: false, text: 'Ac' }
+        { name: true, text: 'Ad' }
+        { text: 'Ae'}
+      ])
+
+      expected = ['Aa', 'Ab', 'Ac', 'Ad', 'Ae']
+      actual = _.map collection.typeahead('a'), (m) -> m.get('text')
+
+      actual.should.eql expected
+
   describe 'Common Backbone Scenarios', ->
     it 'should handle attributes with array values', ->
       class MyModel extends Backbone.Model
