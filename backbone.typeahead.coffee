@@ -11,7 +11,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     _.uniq(@_tokenize(_.flatten(_.map(@typeaheadAttributes, (att) -> model.get(att))).join(' ')))
 
   _addToIndex: (models) ->
-    if _.isArray(models) then models.slice() else [models]
+    models = [models] unless _.isArray(models)
 
     for model in models
       tokens = @_tokenizeModel(model)
@@ -25,7 +25,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
         adjacency.push(id) unless ~_.indexOf(adjacency, id)
 
   _removeFromIndex: (models) ->
-    if _.isArray(models) then models.slice() else [models]
+    models = [models] unless _.isArray(models)
 
     ids = _.pluck(models, 'id')
 
