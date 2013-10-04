@@ -112,7 +112,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
   remove: ->
     models = super
     models = [models] unless _.isArray(models)
-    @_rebuildIndex models
+    @_removeFromIndex models
     models
 
   _onModelEvent: (event, model, collection, options) ->
