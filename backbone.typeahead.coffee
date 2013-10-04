@@ -31,7 +31,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
   _removeFromIndex: (models) ->
     models = [models] unless _.isArray(models)
 
-    ids = _.pluck(models, 'id')
+    ids = _.map(models, (m) -> if m.id? then m.id else m.cid)
 
     delete @_tokens[id] for id in ids
 
