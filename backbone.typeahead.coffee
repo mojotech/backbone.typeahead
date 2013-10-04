@@ -43,12 +43,6 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     @_tokens = {}
     @_addToIndex @models
 
-  _facetMatch: (facets, attributes) ->
-    for k,v of facets
-      return false if v? and v isnt attributes[k]
-
-    return true
-
   typeaheadIndexer: (facets) ->
     return null unless facets? and _.keys(facets).length > 0
     _.map(@where(facets), (m) -> if m.id? then m.id else m.cid)
@@ -57,10 +51,10 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     throw new Error('Index is not built') unless @_adjacency?
 
     queryTokens = @_tokenize(query)
-    suggestions = []
     lists = []
     shortestList = null
     firstChars = _(queryTokens).chain().map((t) -> t.charAt(0)).uniq().value()
+    checkIfShortestList = (list) => shortestList = list if list.length < (shortestList?.length or @length)
 
     _.all firstChars, (firstChar) =>
       list = @_adjacency[firstChar]
@@ -68,17 +62,22 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
       return false unless list?
 
       lists.push list
-      shortestList = list if list.length < (shortestList?.length or @length)
+      checkIfShortestList list
 
       true
 
     return [] if lists.length < firstChars.length
 
     facetList = @typeaheadIndexer(facets)
-    lists.push facetList if facetList?
-    shortestList = facetList if facetList? and facetList.length < (shortestList?.length or @length)
+
+    if facetList?
+      lists.push facetList
+      checkIfShortestList facetList
 
     return @models unless shortestList?
+    return [] if shortestList.length is 0
+
+    suggestions = []
 
     for id in shortestList
       isCandidate = _.every lists, (list) ->
