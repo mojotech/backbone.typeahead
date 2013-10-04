@@ -36,7 +36,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     delete @_tokens[id] for id in ids
 
     for k,v of @_adjacency
-      @_adjacency[k] = _.without(v, ids)
+      @_adjacency[k] = _.without(v, ids...)
 
   _rebuildIndex: ->
     @_adjacency = {}
@@ -116,8 +116,16 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     models
 
   _onModelEvent: (event, model, collection, options) ->
-    if event is "change:#{model.idAttribute}" or _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
+    add = false
+
+    if event is "change:#{model.idAttribute}"
+      add = true
+      debugger
+      @_removeFromIndex id: model.previous(model.idAttribute)
+    else if _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
+      add = true
       @_removeFromIndex model
-      @_addToIndex model
+
+    @_addToIndex model if add
 
     super
