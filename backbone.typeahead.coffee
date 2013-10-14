@@ -1,3 +1,7 @@
+# Backbone.Typeahead 1.0.0
+# (c) 2013 Mojotech
+# Backbone.Typeahead may be freely distributed under the MIT license.
+
 class Backbone.TypeaheadCollection extends Backbone.Collection
   _tokenize: (s) ->
     s = $.trim(s)
