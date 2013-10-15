@@ -119,7 +119,6 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
     if event is "change:#{model.idAttribute}"
       add = true
-      debugger
       @_removeFromIndex id: model.previous(model.idAttribute)
     else if _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
       add = true
