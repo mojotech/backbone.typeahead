@@ -191,7 +191,7 @@ describe 'Backbone Typeahead', ->
       actual.should.eql expected
 
     it 'should handle removing a model', ->
-      @albums.remove @albums.findWhere(band: 'Queen')
+      @albums.remove @albums.where(band: 'Queen')
 
       expected = ['Whenever You Need Somebody']
       actual = _.map @albums.typeahead('you'), (a) -> a.get('name')
