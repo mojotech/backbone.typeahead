@@ -81,6 +81,7 @@ describe 'Backbone Typeahead', ->
       actual = _.map collection.typeahead('b'), (m) -> m.get('name')
 
       actual.should.eql expected
+      collection._adjacency['b'].length.should.eql 3
 
     it 'should handle an empty collection', ->
       class TestCollection extends Backbone.TypeaheadCollection
@@ -189,6 +190,7 @@ describe 'Backbone Typeahead', ->
       actual = _.map @albums.typeahead('ti'), (m) -> m.get('name')
 
       actual.should.eql expected
+      @albums._adjacency['t'].length.should.eql 3
 
     it 'should handle removing a model', ->
       @albums.remove @albums.where(band: 'Queen')
@@ -197,6 +199,7 @@ describe 'Backbone Typeahead', ->
       actual = _.map @albums.typeahead('you'), (a) -> a.get('name')
 
       actual.should.eql.expected
+      @albums._adjacency['y'].length.should.eql 1
 
     it 'should handle changing a typeahead attribute value', ->
       model = @albums.findWhere(band: 'Rick Astley')
@@ -206,3 +209,4 @@ describe 'Backbone Typeahead', ->
       actual = _.map @albums.typeahead('m'), (m) -> m.get('name')
 
       actual.should.eql expected
+      @albums._adjacency['m'].length.should.eql 2
