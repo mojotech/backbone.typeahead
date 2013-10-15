@@ -134,6 +134,8 @@ describe 'Backbone Typeahead', ->
       expected = [1, 2]
       actual = _.map collection.typeahead('a'), (m) -> m.id
 
+      actual.should.eql expected
+
     it 'should support alternative ID attributes', ->
       json = '[{"url":"people/Nick-Kishfy","indexText":"Nick Kishfy Founder & CEO boss hiker ceo","title":"Nick Kishfy"}]'
 
@@ -147,6 +149,24 @@ describe 'Backbone Typeahead', ->
       collection = new PageCollection(JSON.parse(json))
 
       collection.typeahead().length.should.eql collection.length
+      collection._adjacency['n'].length.should.eql collection.length
+
+    it 'should handle changing ID attribute value', ->
+      json = '[{"url":"people/Nick-Kishfy","indexText":"Nick Kishfy Founder & CEO boss hiker ceo","title":"Nick Kishfy"}]'
+
+      class PageModel extends Backbone.Model
+        idAttribute: 'url'
+
+      class PageCollection extends Backbone.TypeaheadCollection
+        model: PageModel
+        typeaheadAttributes: ['indexText']
+
+      collection = new PageCollection(JSON.parse(json))
+
+      collection.get('people/Nick-Kishfy').set('url', 'ceo')
+
+      collection.typeahead().length.should.eql collection.length
+      collection._adjacency['n'].length.should.eql collection.length
 
   describe 'Collection Changes', ->
     class Albums extends Backbone.TypeaheadCollection
