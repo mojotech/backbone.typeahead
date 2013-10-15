@@ -1,3 +1,7 @@
+# Backbone.Typeahead 1.0.0
+# (c) 2013 Mojotech
+# Backbone.Typeahead may be freely distributed under the MIT license.
+
 class Backbone.TypeaheadCollection extends Backbone.Collection
   _tokenize: (s) ->
     s = $.trim(s)
@@ -99,17 +103,17 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     @_adjacency = {}
     super
 
-  #TODO: do this smarter
-  set: (models, options) ->
-    super
-    @_rebuildIndex()
-    @
+  set: ->
+    models = super
+    models = [models] unless _.isArray(models)
+    @_rebuildIndex models
+    models
 
-  #TODO: do this smarter
-  remove: (models, options) ->
-    super
-    @_rebuildIndex()
-    @
+  remove: ->
+    models = super
+    models = [models] unless _.isArray(models)
+    @_rebuildIndex models
+    models
 
   _onModelEvent: (event, model, collection, options) ->
     if event is "change:#{model.idAttribute}" or _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
