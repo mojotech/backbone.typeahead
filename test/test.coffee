@@ -2,11 +2,11 @@ should = require 'should'
 global.$ = require 'jquery'
 global._ = require 'underscore'
 global.Backbone = require 'backbone'
-require '../backbone.typeahead.coffee'
+TypeaheadCollection = require '../backbone.typeahead.coffee'
 
 describe 'Backbone Typeahead', ->
   describe 'Readme Tests', ->
-    class Albums extends Backbone.TypeaheadCollection
+    class Albums extends TypeaheadCollection
         typeaheadAttributes: ['band', 'name']
 
     beforeEach ->
@@ -30,7 +30,7 @@ describe 'Backbone Typeahead', ->
       actual.should.eql expected
 
   describe 'Support External Indexes for Facets', ->
-    class IndexedCollection extends Backbone.TypeaheadCollection
+    class IndexedCollection extends TypeaheadCollection
       typeaheadAttributes: ['name']
       typeaheadIndexer: (facet, value) -> @index
       initialize: (models, options) -> @index = options.index
@@ -66,7 +66,7 @@ describe 'Backbone Typeahead', ->
 
   describe 'Common Error States', ->
     it 'should handle a falsy id', ->
-      class TestCollection extends Backbone.TypeaheadCollection
+      class TestCollection extends TypeaheadCollection
         typeaheadAttributes: ['name']
 
       collection = new TestCollection([
@@ -84,7 +84,7 @@ describe 'Backbone Typeahead', ->
       collection._adjacency['b'].length.should.eql 3
 
     it 'should handle an empty collection', ->
-      class TestCollection extends Backbone.TypeaheadCollection
+      class TestCollection extends TypeaheadCollection
         typeaheadAttributes: ['id']
 
         collection = new TestCollection()
@@ -95,14 +95,14 @@ describe 'Backbone Typeahead', ->
         actual.should.eql expected
 
     it 'should require the typeaheadAttributes member', ->
-      class BrokenCollection extends Backbone.TypeaheadCollection
+      class BrokenCollection extends TypeaheadCollection
       causeError = ->
         collection = new BrokenCollection({name: 'Test'})
 
       causeError.should.throw('Missing typeaheadAttributes value')
 
     it 'should handle null/weird/missing attribute values', ->
-      class BrokenCollection extends Backbone.TypeaheadCollection
+      class BrokenCollection extends TypeaheadCollection
         typeaheadAttributes: ['name', 'text']
 
       collection = new BrokenCollection([
@@ -122,7 +122,7 @@ describe 'Backbone Typeahead', ->
     it 'should handle attributes with array values', ->
       class MyModel extends Backbone.Model
 
-      class MyCollection extends Backbone.TypeaheadCollection
+      class MyCollection extends TypeaheadCollection
         model: MyModel
         typeaheadAttributes: ['array']
 
@@ -143,7 +143,7 @@ describe 'Backbone Typeahead', ->
       class PageModel extends Backbone.Model
         idAttribute: 'url'
 
-      class PageCollection extends Backbone.TypeaheadCollection
+      class PageCollection extends TypeaheadCollection
         model: PageModel
         typeaheadAttributes: ['indexText']
 
@@ -158,7 +158,7 @@ describe 'Backbone Typeahead', ->
       class PageModel extends Backbone.Model
         idAttribute: 'url'
 
-      class PageCollection extends Backbone.TypeaheadCollection
+      class PageCollection extends TypeaheadCollection
         model: PageModel
         typeaheadAttributes: ['indexText']
 
@@ -170,7 +170,7 @@ describe 'Backbone Typeahead', ->
       collection._adjacency['n'].length.should.eql collection.length
 
   describe 'Collection Changes', ->
-    class Albums extends Backbone.TypeaheadCollection
+    class Albums extends TypeaheadCollection
       typeaheadAttributes: ['band', 'name']
 
     beforeEach ->
