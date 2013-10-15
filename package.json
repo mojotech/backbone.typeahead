@@ -34,5 +34,6 @@
   ],
   "homepage": "https://github.com/mojotech/backbone.typeahead",
   "license": "MIT",
-  "main": "backbone.typeahead.min.js"
+  "main": "backbone.typeahead.min.js",
+  "files": ["LICENSE", "backbone.typeahead.min.js"]
 }

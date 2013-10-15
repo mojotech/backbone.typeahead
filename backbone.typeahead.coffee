@@ -2,9 +2,21 @@
 # (c) 2013 Mojotech
 # Backbone.Typeahead may be freely distributed under the MIT license.
 
-class Backbone.TypeaheadCollection extends Backbone.Collection
+root = this
+
+trim = String.prototype.trim or -> this.replace(/^\s+|\s+$/g, '')
+
+_ = root._
+_ = require('underscore') if !_ and require?
+
+Backbone = root.Backbone
+Backbone = require('backbone') if !Backbone and require?
+
+
+class TypeaheadCollection extends Backbone.Collection
   _tokenize: (s) ->
-    s = $.trim(s)
+    return null unless s?
+    s = trim.call(s)
     return null if s.length is 0
 
     s.toLowerCase().split(/[\s\-_]+/)
@@ -127,3 +139,6 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     @_addToIndex model if add
 
     super
+
+Backbone.TypeaheadCollection = TypeaheadCollection
+module.exports = TypeaheadCollection if module?.exports?
