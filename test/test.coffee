@@ -134,6 +134,8 @@ describe 'Backbone Typeahead', ->
       expected = [1, 2]
       actual = _.map collection.typeahead('a'), (m) -> m.id
 
+      actual.should.eql expected
+
     it 'should support alternative ID attributes', ->
       json = '[{"url":"people/Nick-Kishfy","indexText":"Nick Kishfy Founder & CEO boss hiker ceo","title":"Nick Kishfy"}]'
 
