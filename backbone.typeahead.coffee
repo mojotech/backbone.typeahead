@@ -31,23 +31,17 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
   _removeFromIndex: (models) ->
     models = [models] unless _.isArray(models)
 
-    ids = _.pluck(models, 'id')
+    ids = _.map(models, (m) -> if m.id? then m.id else m.cid)
 
     delete @_tokens[id] for id in ids
 
     for k,v of @_adjacency
-      @_adjacency[k] = _.without(v, ids)
+      @_adjacency[k] = _.without(v, ids...)
 
   _rebuildIndex: ->
     @_adjacency = {}
     @_tokens = {}
     @_addToIndex @models
-
-  _facetMatch: (facets, attributes) ->
-    for k,v of facets
-      return false if v? and v isnt attributes[k]
-
-    return true
 
   typeaheadIndexer: (facets) ->
     return null unless facets? and _.keys(facets).length > 0
@@ -57,10 +51,10 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     throw new Error('Index is not built') unless @_adjacency?
 
     queryTokens = @_tokenize(query)
-    suggestions = []
     lists = []
     shortestList = null
     firstChars = _(queryTokens).chain().map((t) -> t.charAt(0)).uniq().value()
+    checkIfShortestList = (list) => shortestList = list if list.length < (shortestList?.length or @length)
 
     _.all firstChars, (firstChar) =>
       list = @_adjacency[firstChar]
@@ -68,17 +62,22 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
       return false unless list?
 
       lists.push list
-      shortestList = list if list.length < (shortestList?.length or @length)
+      checkIfShortestList list
 
       true
 
     return [] if lists.length < firstChars.length
 
     facetList = @typeaheadIndexer(facets)
-    lists.push facetList if facetList?
-    shortestList = facetList if facetList? and facetList.length < (shortestList?.length or @length)
+
+    if facetList?
+      lists.push facetList
+      checkIfShortestList facetList
 
     return @models unless shortestList?
+    return [] if shortestList.length is 0
+
+    suggestions = []
 
     for id in shortestList
       isCandidate = _.every lists, (list) ->
@@ -112,12 +111,20 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
   remove: ->
     models = super
     models = [models] unless _.isArray(models)
-    @_rebuildIndex models
+    @_removeFromIndex models
     models
 
   _onModelEvent: (event, model, collection, options) ->
-    if event is "change:#{model.idAttribute}" or _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
+    add = false
+
+    if event is "change:#{model.idAttribute}"
+      add = true
+      debugger
+      @_removeFromIndex id: model.previous(model.idAttribute)
+    else if _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
+      add = true
       @_removeFromIndex model
-      @_addToIndex model
+
+    @_addToIndex model if add
 
     super
