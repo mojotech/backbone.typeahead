@@ -10,9 +10,8 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     s.toLowerCase().split(/[\s\-_]+/)
 
   _tokenizeModel: (model) ->
-    throw new Error('Missing typeaheadAttributes value') unless @typeaheadAttributes?
-
-    _.uniq(@_tokenize(_.flatten(_.map(@typeaheadAttributes, (att) -> model.get(att))).join(' ')))
+    attributeValues = if @typeaheadAttributes? then _.map(@typeaheadAttributes, (att) -> model.get(att)) else _.values(model.attributes)
+    _.uniq(@_tokenize(_.flatten(attributeValues).join(' ')))
 
   _addToIndex: (models) ->
     models = [models] unless _.isArray(models)
@@ -120,9 +119,10 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     if event is "change:#{model.idAttribute}"
       add = true
       @_removeFromIndex id: model.previous(model.idAttribute)
-    else if _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
-      add = true
-      @_removeFromIndex model
+    else if event.indexOf('change:') is 0
+      if not @typeaheadAttributes? or _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
+        add = true
+        @_removeFromIndex model
 
     @_addToIndex model if add
 
