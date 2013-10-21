@@ -87,12 +87,12 @@ describe 'Backbone Typeahead', ->
       class TestCollection extends Backbone.TypeaheadCollection
         typeaheadAttributes: ['id']
 
-        collection = new TestCollection()
+      collection = new TestCollection()
 
-        expected = []
-        actual = _.map collection.typeahead('a'), (m) -> m.id
+      expected = []
+      actual = _.map collection.typeahead('a'), (m) -> m.id
 
-        actual.should.eql expected
+      actual.should.eql expected
 
     it 'should handle null/weird/missing attribute values', ->
       class BrokenCollection extends Backbone.TypeaheadCollection
