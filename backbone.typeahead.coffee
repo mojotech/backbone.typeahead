@@ -9,9 +9,59 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
 
     s.toLowerCase().split(/[\s\-_]+/)
 
+  ###
+    Recursive method for walking an object as defined by an
+    array. Returns the value of the last key in the array
+    sequence.
+    @private
+    @method _deepObjectMap
+    @param {Object} Object to walk
+    @param {Array} Keys to walk the object with
+    @return {Value} Last value from the object by array walk
+
+    @example
+      _deepObjectMap
+        key:
+          key2:
+            key3: "val"
+        , ['key', 'key2', 'key3']
+      # Returns "val"
+  ###
+  _deepObjectMap: (obj, attrs) ->
+    return obj unless attrs.length > 0 and _.isObject(obj)
+    return obj[attrs[0]] if attrs.length is 1
+    @_deepObjectMap(obj[attrs[0]], attrs.slice(1, attrs.length))
+
+
+  ###
+    Split each typeaheadAttribute into an array of nested methods
+    and return an array map the returned values from deepObjectMap.
+    @private
+    @method _getAttributeValues
+    @param {Backbone.Model} Model to fetch and map values from
+    @return {Array} Values from model retrieved by _deepObjectMap
+
+  ###
+  _getAttributeValues: (model) ->
+    _.map(@typeaheadAttributes, (att) =>
+      attArray = att.split('.')
+      @_deepObjectMap(model.get(attArray[0]), attArray[1..-1]))
+
+  # Check if typeaheadAttributes were set. If they were then retrieve
+  # the values via _getAttributeValues. Otherwise, get all of the values
+  # from the movdel.
+  _extractValues: (model) ->
+    if @typeaheadAttributes?
+      @_getAttributeValues(model)
+    else _.values(model.attributes)
+
   _tokenizeModel: (model) ->
-    attributeValues = if @typeaheadAttributes? then _.map(@typeaheadAttributes, (att) -> model.get(att)) else _.values(model.attributes)
-    _.uniq(@_tokenize(_.flatten(attributeValues).join(' ')))
+    _.uniq(@_tokenize(
+      _.flatten(
+        @_extractValues(model)
+        ).join(' ')
+      )
+    )
 
   _addToIndex: (models) ->
     models = [models] unless _.isArray(models)
