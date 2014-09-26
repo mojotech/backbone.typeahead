@@ -1,0 +1,22 @@
+{
+  "name": "backbone.typeahead",
+  "version": "1.0.0",
+  "homepage": "https://github.com/mkojotech/backbone.typeahead",
+  "authors": [
+    "MojoTech <hello@mojotech.com>"
+  ],
+  "description": "Integrates typeahead into backbone collections.",
+  "main": "backbone.typeahead.min.js",
+  "keywords": [
+    "typeahead",
+    "autocomplete",
+    "auto-complete",
+    "instant",
+    "search",
+    "incremental",
+    "search",
+    "real-time",
+    "search"
+  ],
+  "license": "MIT"
+}
