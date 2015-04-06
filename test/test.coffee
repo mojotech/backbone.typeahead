@@ -100,6 +100,23 @@ describe 'Backbone Typeahead', ->
 
       actual.should.eql expected
 
+    it 'should handle empty search value', ->
+      class TestCollection extends Backbone.TypeaheadCollection
+        typeaheadAttributes: ['name', 'text']
+
+      collection = new TestCollection([
+        { id: 1, name: 'Aa' }
+        { id: 2, name: 'Ab' }
+        { id: 3, name: 'Ba' }
+        { id: 4, name: 'Ac' }
+      ])
+
+      expected = ['Aa', 'Ab', 'Ba', 'Ac']
+      actual = _.map collection.typeahead(' '), (m) -> m.get('name')
+
+      actual.should.eql expected
+
+
     it 'should handle null/weird/missing attribute values', ->
       class BrokenCollection extends Backbone.TypeaheadCollection
         typeaheadAttributes: ['name', 'text']
@@ -116,6 +133,37 @@ describe 'Backbone Typeahead', ->
       actual = _.map collection.typeahead('a'), (m) -> m.get('text')
 
       actual.should.eql expected
+
+    it 'should handle similar numerics in tokens', ->
+      class TestCollection extends Backbone.TypeaheadCollection
+        typeaheadAttributes: ['name', 'text']
+
+      collection = new TestCollection([
+        { name: "01234567", text: 'Aa' }
+        { name: "01234568", text: 'Ab' }
+        { name: "01234569", text: 'Ac' }
+      ])
+
+      expected = ['Ac']
+      actual = _.map collection.typeahead('01234569'), (m) -> m.get('text')
+
+      actual.should.eql expected
+
+    it 'should handle repeted character inputs', ->
+      class TestCollection extends Backbone.TypeaheadCollection
+        typeaheadAttributes: ['name', 'text']
+
+      collection = new TestCollection([
+        { name: "Apple Banana Aces", text: 'Aa' }
+        { name: "Banana Apple Seal", text: 'Ab' }
+        { name: "Carrot Car Carrier", text: 'Ac' }
+      ])
+
+      expected = []
+      actual = _.map collection.typeahead('aaaaaaaaaaaa'), (m) -> m.get('text')
+
+      actual.should.eql expected
+
 
   describe 'Common Backbone Scenarios', ->
     it 'should assume all attributes if missing the typeaheadAttributes member', ->
