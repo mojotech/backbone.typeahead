@@ -103,7 +103,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     lists = []
     shortestList = null
     firstChars = _(queryTokens).chain().map((t) -> t.charAt(0)).uniq().value()
-    checkIfShortestList = (list) => shortestList = list if list.length < (shortestList?.length or @length)
+    checkIfShortestList = (list) => shortestList = list if list.length <= (shortestList?.length or @length)
 
     _.all firstChars, (firstChar) =>
       list = @_adjacency[firstChar]
