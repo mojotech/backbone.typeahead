@@ -1,5 +1,5 @@
 {
-  "name": "backbone.typeahead",
+  "name": "backbone.typeahead.collection",
   "version": "1.0.0",
   "homepage": "https://github.com/mojotech/backbone.typeahead",
   "authors": [
@@ -18,5 +18,12 @@
     "real-time",
     "search"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
