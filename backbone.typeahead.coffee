@@ -164,16 +164,17 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     models
 
   _onModelEvent: (event, model, collection, options) ->
-    add = false
+    if model?
+      add = false
 
-    if event is "change:#{model.idAttribute}"
-      add = true
-      @_removeFromIndex id: model.previous(model.idAttribute)
-    else if event.indexOf('change:') is 0
-      if not @typeaheadAttributes? or _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
+      if event is "change:#{model.idAttribute}"
         add = true
-        @_removeFromIndex model
+        @_removeFromIndex id: model.previous(model.idAttribute)
+      else if event.indexOf('change:') is 0
+        if not @typeaheadAttributes? or _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
+          add = true
+          @_removeFromIndex model
 
-    @_addToIndex model if add
+      @_addToIndex model if add
 
     super
