@@ -3,8 +3,8 @@
 # Backbone.Typeahead may be freely distributed under the MIT license.
 
 class Backbone.TypeaheadCollection extends Backbone.Collection
-  _tokenize: (s) ->
-    s = $.trim(s)
+  _tokenize: (s = '') ->
+    s = s.trim()
     return null if s.length is 0
 
     s.toLowerCase().split(/[\s\-_]+/)

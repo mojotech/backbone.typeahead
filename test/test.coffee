@@ -1,5 +1,4 @@
 should = require 'should'
-global.$ = require 'jquery'
 global._ = require 'underscore'
 global.Backbone = require 'backbone'
 require '../backbone.typeahead.coffee'
