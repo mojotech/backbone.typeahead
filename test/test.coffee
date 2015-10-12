@@ -1,7 +1,7 @@
 should = require 'should'
 global._ = require 'underscore'
 global.Backbone = require 'backbone'
-require '../backbone.typeahead.coffee'
+require '../src/backbone.typeahead.coffee'
 
 describe 'Backbone Typeahead', ->
   describe 'Readme Tests', ->
