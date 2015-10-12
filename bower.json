@@ -6,7 +6,7 @@
     "MojoTech <hello@mojotech.com>"
   ],
   "description": "Integrates typeahead into backbone collections.",
-  "main": "backbone.typeahead.min.js",
+  "main": "dist/backbone.typeahead.min.js",
   "keywords": [
     "typeahead",
     "autocomplete",
