@@ -11,6 +11,19 @@ View the [online demo](http://mojotech.github.io/backbone.typeahead).
 ```coffeescript
 class Albums extends Backbone.TypeaheadCollection
   typeaheadAttributes: ['band', 'name', 'meta.members']
+  tokenizeAttribute: (s) ->
+    s = s.trim()
+    return null if s.length is 0
+
+    tokens = []
+
+    for word in s.toLowerCase().split(/[\s\-_]+/)
+      i = 0
+      while i < word.length
+        tokens.push(word.substr(i))
+        i++
+
+    tokens
 
 albums = new Albums([
   { band: 'A Flock of Seagulls', name: 'A Flock of Seagulls', meta: { members: ['Mike Score'] }}
@@ -32,6 +45,11 @@ console.log album.get('name') for album in albums.typeahead('fred')
 # Outputs:
 #  A Day at the Races
 #  Tie Your Mother Down
+
+# Custom tokenizer
+console.log album.get('name') for album in albums.typeahead('ces')
+# Outputs:
+#  A Day at the Races
 ```
 
 Inspired by Twitter's [typeahead.js](http://twitter.github.io/typeahead.js/).

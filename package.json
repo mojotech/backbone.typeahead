@@ -20,9 +20,8 @@
   "devDependencies": {
     "coffee-script": "latest",
     "uglify-js": "latest",
-    "mocha": "~1.12.1",
-    "should": "~1.2.2",
-    "jquery": "~1.8.3"
+    "mocha": "~2.3.3",
+    "should": "~7.1.0"
   },
   "keywords": [
     "typeahead",
