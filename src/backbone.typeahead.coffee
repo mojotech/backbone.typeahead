@@ -109,7 +109,8 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     lists = []
     shortestList = null
     firstChars = _(queryTokens).chain().map((t) -> t.charAt(0)).uniq().value()
-    checkIfShortestList = (list) => shortestList = list if list.length <= (shortestList?.length or @length)
+    checkIfShortestList = (list) =>
+      shortestList = list if list.length <= (shortestList?.length or @length)
 
     _.all firstChars, (firstChar) =>
       list = @_adjacency[firstChar]
@@ -177,7 +178,8 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
         add = true
         @_removeFromIndex id: model.previous(model.idAttribute)
       else if event.indexOf('change:') is 0
-        if not @typeaheadAttributes? or _.indexOf(_.map(@typeaheadAttributes, (att) -> 'change:' + att), event) >= 0
+        changeEventList = _.map(@typeaheadAttributes, (att) -> 'change:' + att)
+        if not @typeaheadAttributes? or _.contains(changeEventList, event)
           add = true
           @_removeFromIndex model
 
