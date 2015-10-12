@@ -3,6 +3,12 @@
 # Backbone.Typeahead may be freely distributed under the MIT license.
 
 class Backbone.TypeaheadCollection extends Backbone.Collection
+  tokenizeQuery: (s) ->
+    @_tokenize(s)
+
+  tokenizeAttribute: (s) ->
+    @_tokenize(s)
+
   _tokenize: (s = '') ->
     s = s.trim()
     return null if s.length is 0
@@ -56,7 +62,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     else _.values(model.attributes)
 
   _tokenizeModel: (model) ->
-    _.uniq(@_tokenize(
+    _.uniq(@tokenizeAttribute(
       _.flatten(
         @_extractValues(model)
         ).join(' ')
@@ -99,7 +105,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
   typeahead: (query, facets) ->
     throw new Error('Index is not built') unless @_adjacency?
 
-    queryTokens = @_tokenize(query)
+    queryTokens = @tokenizeQuery(query)
     lists = []
     shortestList = null
     firstChars = _(queryTokens).chain().map((t) -> t.charAt(0)).uniq().value()

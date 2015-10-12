@@ -291,3 +291,34 @@ describe 'Backbone Typeahead', ->
       actual = _.map @albums.typeahead('Brian'), (a) -> a.get('meta').name
 
       actual.should.eql expected
+
+  describe 'Custom tokenizer', ->
+    class Albums extends Backbone.TypeaheadCollection
+      typeaheadAttributes: ['band', 'meta.name', 'meta.members']
+      tokenizeAttribute: (s) ->
+        s = s.trim()
+        return null if s.length is 0
+
+        tokens = []
+
+        for word in s.toLowerCase().split(/[\s\-_]+/)
+          i = 0
+          while i < word.length
+            tokens.push(word.substr(i))
+            i++
+
+        tokens
+
+    beforeEach ->
+      @albums = new Albums([
+        { band: 'A Flock of Seagulls', meta: { name: 'A Flock of Seagulls', members: ['Mike Score'] }}
+        { band: 'Rick Astley', meta: { name: 'Whenever You Need Somebody', members: ['Rick Astley'] }}
+        { band: 'Queen', meta: { name: 'A Day at the Races', members: ['Brian May'] }}
+        { band: 'Queen', meta: { name: 'Tie Your Mother Down', members: ['Brian May'] }}
+      ])
+
+    it 'should handle string nested attributes', ->
+      expected = ['A Day at the Races']
+      actual = _.map @albums.typeahead('ces'), (a) -> a.get('meta').name
+
+      actual.should.eql expected
