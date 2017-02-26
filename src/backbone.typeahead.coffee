@@ -112,7 +112,7 @@ class Backbone.TypeaheadCollection extends Backbone.Collection
     checkIfShortestList = (list) =>
       shortestList = list if list.length <= (shortestList?.length or @length)
 
-    _.all firstChars, (firstChar) =>
+    _.every firstChars, (firstChar) =>
       list = @_adjacency[firstChar]
 
       return false unless list?
