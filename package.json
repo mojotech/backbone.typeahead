@@ -1,6 +1,6 @@
 {
   "name": "backbone.typeahead",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Backbone collection typeahead search with facet",
   "repository": {
     "type": "git",
