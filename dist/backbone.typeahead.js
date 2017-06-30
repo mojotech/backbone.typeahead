@@ -183,7 +183,7 @@
           }
         };
       })(this);
-      _.all(firstChars, (function(_this) {
+      _.every(firstChars, (function(_this) {
         return function(firstChar) {
           var list;
           list = _this._adjacency[firstChar];
